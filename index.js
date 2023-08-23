@@ -1,34 +1,43 @@
+const express = require('express');
 const puppeteer = require('puppeteer-extra');
 const config = require('./config');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
+const app = express();
+const port = 3000;
 
-(async () => {
+// express.urlencoded: 미들웨어로 HTMP 폼 데이터 해석해서 JS객체로 변환
+app.use(express.urlencoded({extended: true}));
+// express.json: 미들웨어로 JSON 데이터 해석해서 JS 객체로 변환
+app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');    // Front-End 폼 보여줄 루트 경로
+});
+
+app.post('/submit', async(req, res) => {
+    // Puppeteer 브라우저 인스턴스 생성
     const browser = await puppeteer.launch({
-        ignoreHTTPSErrors: true,
-        headless:false,
-        defaultViewport: { width: 1024, height: 800 }
-        });
-        const context = await browser.createIncognitoBrowserContext();  // 시크릿모두
-        const page = await context.newPage();
+        ignoreHTTPSErrors: true, // HTTP 오류 무시
+        headless: false, // 브라우저 창을 띄움 (headless: true로 설정하면 보이지 않는 상태로 실행)
+        defaultViewport: { width: 1024, height: 800 } // 브라우저 창 크기 설정
+    });
+    // 새로운 브라우저 컨텍스트 생성 (시크릿 브라우징)
+    const context = await browser.createIncognitoBrowserContext();
+    const page = await context.newPage(); // 새 페이지 생성
 
+    await daum(page);   // 다음 제출
+    await naver(page);  // 네이버 제출
+    await google(page); // 구글 제출
 
-     
+    await browser.close(); // 브라우저 닫기
 
+});
 
-    await daum(page);
-    await naver(page);
-    await google(page);
-
-
-    await browser.close();
-
-})();
-
-
-
+app.listen(port, ()=> {
+    console.log('Server is running on port ${port}'); //서버 시작 로그
+})
 
 
 
