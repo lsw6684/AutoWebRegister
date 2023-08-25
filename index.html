@@ -3,35 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/css/styles.css?after">
   <title>Puppeteer 정보 등록</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
   <h1>Auto Web Register</h1>
-  <form id="infoForm">
+  <form id="infoForm" action="/submit" method="POST">
     <label for="targetUrl">대상 URL:</label>
     <input type="text" id="targetUrl" name="targetUrl" required><br>
 
-    <label for="daumPw">다음 ID:</label>
+    <label for="daumId">Daum URL:</label>
     <input type="text" id="daumId" name="daumId" required><br>
 
-    <label for="daumPw">다음 비밀번호:</label>
+    <label for="daumPw">Daum 비밀번호:</label>
     <input type="password" id="daumPw" name="daumPw" required><br>
 
-    <label for="naverId">네이버 아이디:</label>
+    <label for="naverId">Naver 아이디:</label>
     <input type="text" id="naverId" name="naverId" required><br>
 
-    <label for="naverPw">네이버 비밀번호:</label>
+    <label for="naverPw">Naver 비밀번호:</label>
     <input type="password" id="naverPw" name="naverPw" required><br>
 
-    <label for="googleId">구글 아이디:</label>
+    <label for="googleId">Google Email:</label>
     <input type="text" id="googleId" name="googleId" required><br>
 
-    <label for="googlePw">구글 비밀번호:</label>
+    <label for="googlePw">Google 비밀번호:</label>
     <input type="password" id="googlePw" name="googlePw" required><br>
 
     <button type="submit">등록</button>
   </form>
-  <script src="scripts.js"></script>
+
+  <script>
+    // 페이지 로딩 시, 저장된 데이터가 있으면 입력 필드에 값을 채움
+    $(document).ready(function() {
+      const inputFields = ["targetUrl", "daumId", "daumPw", "naverId", "naverPw", "googleId", "googlePw"];
+      inputFields.forEach(function(fieldName) {
+        const savedValue = localStorage.getItem(fieldName);
+        if (savedValue) {
+          $("#" + fieldName).val(savedValue);
+        }
+      });
+    });
+
+    // 입력 필드 값 변경 시, 로컬 스토리지에 저장
+    $("input").on("input", function() {
+      const fieldName = $(this).attr("id");
+      const fieldValue = $(this).val();
+      localStorage.setItem(fieldName, fieldValue);
+    });
+  </script>
 </body>
 </html>
