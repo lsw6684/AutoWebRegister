@@ -8,7 +8,7 @@ puppeteer.use(StealthPlugin());
 
 
 const app = express();
-const port = 5500;
+const port = 8080;
 
 // express.urlencoded: 미들웨어로 HTMP 폼 데이터 해석해서 JS객체로 변환
 app.use(express.urlencoded({extended: true}));
