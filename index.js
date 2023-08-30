@@ -1,8 +1,24 @@
 const express = require('express');
 const puppeteer = require('puppeteer-extra');
-const config = require('./config');
+//const config = require('./config');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
+
+var config = {
+    targetUrl:'',   
+    daum: {
+      id: '',     
+      pw: ''       
+    },
+    naver: {
+      id: '',      
+      pw: '',     
+    },
+    google: {
+      id: '',       
+      pw: '',      
+    }
+};
 
 
 
