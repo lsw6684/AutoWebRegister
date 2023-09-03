@@ -25,6 +25,9 @@ var config = {
 const app = express();
 const port = 8080;
 
+// 정적 파일을 제공할 경로를 지정
+app.use(express.static(__dirname));
+
 // express.urlencoded: 미들웨어로 HTMP 폼 데이터 해석해서 JS객체로 변환
 app.use(express.urlencoded({extended: true}));
 // express.json: 미들웨어로 JSON 데이터 해석해서 JS 객체로 변환
