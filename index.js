@@ -23,7 +23,7 @@ var config = {
 
 
 const app = express();
-const port = 8080;
+const PORT = process.env.PORT || 8080;
 
 // 정적 파일을 제공할 경로를 지정
 app.use(express.static(__dirname));
@@ -79,8 +79,8 @@ app.post('/submit', async (req, res) => {
 
 });
 
-app.listen(port, ()=> {
-    console.log(`Server is running on port ${port}`); //서버 시작 로그
+app.listen(PORT, ()=> {
+    console.log(`Server is running on port ${PORT}`); //서버 시작 로그
 })
 
 
