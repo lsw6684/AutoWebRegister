@@ -40,6 +40,11 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');    // Front-End 폼 보여줄 루트 경로
 })
 
+app.get('/test', (req, res) => {
+    console.log('GET /test');
+    res.sendFile(__dirname + '/index.html');    // Front-End 폼 보여줄 루트 경로
+})
+
 // post 핸들러
 app.post('/submit', async (req, res) => {
     console.log('submit');
