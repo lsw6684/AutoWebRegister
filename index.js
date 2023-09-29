@@ -23,7 +23,7 @@ var config = {
 
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 
 // 정적 파일을 제공할 경로를 지정
 app.use(express.static(__dirname));
@@ -139,7 +139,14 @@ async function naver(page) {
 
 
     await page.waitForTimeout(6000);
-    await page.keyboard.press('Enter');
+
+    page.on('dialog', async (dialog) => {
+      console.log( dialog.type() );
+
+      console.log( dialog.message() );
+      await dialog.accept();
+    });
+
     await page.keyboard.press('Enter');
 
     // 스크린샷 찍기
