@@ -118,8 +118,11 @@ async function daum(page) {
 async function naver(page) {
     console.log('Naver Start');
 
+    var blogUrl = new URL(config.daum.id);
+    var domain = blogUrl.hostname;
+
     // 웹으로 이동: Naver search console
-    await page.goto('https://searchadvisor.naver.com/console/site/request/crawl?site=https%3A%2F%2Fallhoneytip.com');
+    await page.goto(`https://searchadvisor.naver.com/console/site/request/crawl?site=https%3A%2F%2F${domain}`);
     console.log('Naver goto')
 
     
@@ -140,15 +143,15 @@ async function naver(page) {
 
     await page.waitForTimeout(6000);
 
-    page.on('dialog', async (dialog) => {
-      console.log( dialog.type() );
+    // page.on('dialog', async (dialog) => {
+    //   console.log( dialog.type() );
 
-      console.log( dialog.message() );
-      await dialog.accept();
-    });
+    //   console.log( dialog.message() );
+    //   await dialog.accept();
+    // });
 
     await page.keyboard.press('Enter');
-
+    
     // 스크린샷 찍기
     //await page.screenshot({ path: 'naver.png' });
 
@@ -188,6 +191,22 @@ async function google(page) {
     await page.type('input[type="password"]', config.google.pw);
     await page.keyboard.press('Enter');
 
+    
+    // 나중에 버튼 가끔 드는 거
+    // 선택자 사용해서 요소 찾기
+    const element = await page.$('span[jsname="V67aGc"]');
+
+    // 요소가 존재하고, HTMLElement이며, 화면에 보이면 클릭합니다.
+    if (element) {
+      const isClickable = await page.evaluate(el => {
+        return el instanceof HTMLElement && el.offsetHeight > 0 && el.offsetWidth > 0;
+      }, element);
+    
+      if (isClickable) {
+        await element.click();
+      } 
+    }
+    
     const text = '개요';
     const parentSelector = 'span.SaG06d';
     
