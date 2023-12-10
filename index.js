@@ -74,9 +74,9 @@ app.post('/submit', async (req, res) => {
 
   await page.waitForTimeout(1000);
 
-  // await daum(page);   // 다음 제출
-  // await naver(page);  // 네이버 제출
-  // await google(page); // 구글 제출
+  await daum(page);   // 다음 제출
+  await naver(page);  // 네이버 제출
+  await google(page); // 구글 제출
   await bing(page);   // Bing 제출
   //await browser.close(); // 브라우저 닫기
 
@@ -273,10 +273,9 @@ async function bing(page) {
   await page.waitForSelector('#identifierId')
   await page.type('#identifierId', config.google.id);
   // 버튼이 나타날 때까지 기다림
-  await page.waitForSelector('button[data-idom-class="nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b"]');
 
+  await page.waitForTimeout(1000);
 
-  //await page.keyboard.press('Enter');
   // 버튼 클릭
   await page.click('button[data-idom-class="nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b"]');
 
