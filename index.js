@@ -231,28 +231,28 @@ async function bing(page) {
     }
   });
 
-  await page.waitForTimeout(1000);
+  // await page.waitForTimeout(1000);
 
 
-  // Google꺼 그대로
-  await page.waitForSelector('#identifierId')
-  await page.type('#identifierId', config.google.id);
-  // 버튼이 나타날 때까지 기다림
+  // // Google꺼 그대로
+  // await page.waitForSelector('#identifierId')
+  // await page.type('#identifierId', config.google.id);
+  // // 버튼이 나타날 때까지 기다림
 
-  await page.waitForTimeout(1000);
+  // await page.waitForTimeout(1000);
 
-  // 버튼 클릭
-  await page.click('button[data-idom-class="nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b"]');
+  // // 버튼 클릭
+  // await page.click('button[data-idom-class="nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b"]');
 
   // 비밀번호 변경 text쪽
-  var selector = '.rhhJr[jsname="f2d3ae"][role="presentation"][tabindex="null"]';
+  // var selector = '.rhhJr[jsname="f2d3ae"][role="presentation"][tabindex="null"]';
 
-  // 요소가 나타날 때까지 대기
-  await page.waitForSelector(selector);
-  await page.type('input[type="password"]', config.google.pw);
-  await page.keyboard.press('Enter');
+  // // 로그인 구글꺼 그대로 사용
+  // await page.waitForSelector(selector);
+  // await page.type('input[type="password"]', config.google.pw);
+  // await page.keyboard.press('Enter');
 
-  await page.waitForTimeout(1000);
+  // await page.waitForTimeout(2000);
   await page.waitForSelector('#TextField31');
   await page.type('#TextField31', config.targetUrl);
 
