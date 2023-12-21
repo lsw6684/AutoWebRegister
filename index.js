@@ -45,44 +45,7 @@ app.get('/test', (req, res) => {
   res.sendFile(__dirname + '/index.html');    // Front-End 폼 보여줄 루트 경로
 })
 
-// post 핸들러
-app.post('/submit', async (req, res) => {
-  console.log('submit');
 
-  const inputData = req.body;
-
-  // 절달 받은 데이터
-  config.targetUrl = String(inputData.targetUrl);
-  config.daum.id = String(inputData.daumId);
-  config.daum.pw = String(inputData.daumPw);
-  config.naver.id = String(inputData.naverId);
-  config.naver.pw = String(inputData.naverPw);
-  config.google.id = String(inputData.googleId);
-  config.google.pw = String(inputData.googlePw);
-  console.log(config);
-
-  // Puppeteer 브라우저 인스턴스 생성
-  const browser = await puppeteer.launch({
-    ignoreHTTPSErrors: true, // HTTP 오류 무시
-    headless: false, // 브라우저 창을 띄움 (headless: true로 설정하면 보이지 않는 상태로 실행)
-    defaultViewport: { width: 1024, height: 800 } // 브라우저 창 크기 설정
-  });
-
-  // 새로운 브라우저 컨텍스트 생성 (시크릿 브라우징)
-  const context = await browser.createIncognitoBrowserContext();
-  const page = await context.newPage(); // 새 페이지 생성
-
-  await page.waitForTimeout(1000);
-
-  await daum(page);   // 다음 제출
-  await naver(page);  // 네이버 제출
-  await google(page); // 구글 제출
-  await bing(page);   // Bing 제출
-  //await browser.close(); // 브라우저 닫기
-
-
-
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`); //서버 시작 로그
@@ -268,6 +231,8 @@ async function bing(page) {
     }
   });
 
+  await page.waitForTimeout(1000);
+
 
   // Google꺼 그대로
   await page.waitForSelector('#identifierId')
@@ -287,6 +252,7 @@ async function bing(page) {
   await page.type('input[type="password"]', config.google.pw);
   await page.keyboard.press('Enter');
 
+  await page.waitForTimeout(1000);
   await page.waitForSelector('#TextField31');
   await page.type('#TextField31', config.targetUrl);
 
@@ -300,12 +266,10 @@ async function bing(page) {
   await changableButton.click();
 
 
-   console.log('hgggggggello');
 
 
   //  // 5초 동안 대기합니다.
    await page.waitForTimeout(3000);
-   console.log('hello');
  
    // 버튼을 클릭합니다.
    await page.evaluate(() => {
@@ -318,3 +282,41 @@ async function bing(page) {
   await page.waitForSelector('button[data-tag="submitBtn"]');
   await page.click('button[data-tag="submitBtn"]');
 }
+
+// post 핸들러
+app.post('/submit', async (req, res) => {
+  console.log('submit');
+
+  const inputData = req.body;
+
+  // 절달 받은 데이터
+  config.targetUrl = String(inputData.targetUrl);
+  config.daum.id = String(inputData.daumId);
+  config.daum.pw = String(inputData.daumPw);
+  config.naver.id = String(inputData.naverId);
+  config.naver.pw = String(inputData.naverPw);
+  config.google.id = String(inputData.googleId);
+  config.google.pw = String(inputData.googlePw);
+  console.log(config);
+
+  // Puppeteer 브라우저 인스턴스 생성
+  const browser = await puppeteer.launch({
+    ignoreHTTPSErrors: true, // HTTP 오류 무시
+    headless: false, // 브라우저 창을 띄움 (headless: true로 설정하면 보이지 않는 상태로 실행)
+    defaultViewport: { width: 1024, height: 800 } // 브라우저 창 크기 설정
+  });
+
+  // 새로운 브라우저 컨텍스트 생성 (시크릿 브라우징)
+  const context = await browser.createIncognitoBrowserContext();
+  const page = await context.newPage(); // 새 페이지 생성
+
+  await page.waitForTimeout(1000);
+
+  await daum(page);   // 다음 제출
+  await naver(page);  // 네이버 제출
+  await google(page); // 구글 제출
+  await bing(page);   // Bing 제출
+  
+
+
+});
