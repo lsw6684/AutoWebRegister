@@ -63,6 +63,7 @@ async function daum(page) {
 
 
   // Login
+  await page.waitForSelector('#authSiteUrl'); // 요소가 나타날 때까지 대기
   await page.type('#authSiteUrl', config.daum.id);
   await page.type('#authPinCode', config.daum.pw);
   console.log('Daum input')
@@ -268,7 +269,7 @@ async function bing(page) {
 
 
 
-  //  // 5초 동안 대기합니다.
+   // 5초 동안 대기합니다.
    await page.waitForTimeout(3000);
  
    // 버튼을 클릭합니다.
