@@ -295,8 +295,8 @@ app.post('/submit', async (req, res) => {
 
   await page.waitForTimeout(1000);
 
-  // await daum(page);   // 다음 제출
-  // await naver(page);  // 네이버 제출
+  await daum(page);   // 다음 제출
+  await naver(page);  // 네이버 제출
   await google(page); // 구글 제출
   await bing(page);   // Bing 제출
   
