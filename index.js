@@ -138,24 +138,27 @@ async function google(page) {
       startButton.click();
     }
   });
+  await page.waitForTimeout(1000);
+
   await page.waitForSelector('#identifierId')
   await page.type('#identifierId', config.google.id);
-  // 버튼이 나타날 때까지 기다림
-  await page.waitForSelector('button[data-idom-class="nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b"]');
-
   console.log('Google ID');
 
-  //await page.keyboard.press('Enter');
-  // 버튼 클릭
-  await page.click('button[data-idom-class="nCP5yc AjY5Oe DuMIQc LQeN7 qIypjc TrZEUc lw1w4b"]');
-
-  // 비밀번호 변경 text쪽
-  var selector = '.rhhJr[jsname="f2d3ae"][role="presentation"][tabindex="null"]';
-
-  // 요소가 나타날 때까지 대기
-  await page.waitForSelector(selector);
-  await page.type('input[type="password"]', config.google.pw);
   await page.keyboard.press('Enter');
+
+  //PW 입력 전
+  await page.waitForFunction(
+    () => document.querySelector('[jsname="bQIQze"]') !== null
+  );
+  
+  await page.waitForTimeout(2000);
+
+
+  // password 입력란에 PW 입력
+  await page.type('input[name="Passwd"]', config.google.pw);
+  
+  await page.keyboard.press('Enter');
+
 
   console.log('Google PW');
 
@@ -202,6 +205,7 @@ async function google(page) {
   await selector.click();
 
   console.log('Google waiting');
+  await page.waitForTimeout(500);
 
   try {
     // 해당 selector가 등장할 때까지 최대 2분(120000ms) 동안 대기
@@ -219,7 +223,8 @@ async function bing(page) {
 
   // 웹으로 이동: Bing Web Master Tool
   await page.goto(`https://www.bing.com/webmasters/urlinspection?siteUrl=${config.daum.id}`);
-  console.log('Bing Webmaster')
+  console.log('Bing Webmaster');
+  console.log(`https://www.bing.com/webmasters/urlinspection?siteUrl=${config.daum.id}`);
 
   // 시작하기 버튼
   await page.waitForSelector('.getStartedButton');
@@ -235,14 +240,37 @@ async function bing(page) {
       elements[1].click(); // 두 번째 요소 클릭
     }
   });
+  console.log('구글 로그인 선택');
 
-  await page.waitForSelector('#TextField31');
-  await page.type('#TextField31', config.targetUrl);
+  // 좌측 메뉴버튼 대기 후 클릭
+  await page.waitForSelector('button.ms-Button.ms-Button--icon.leftNavToggleButton.mobileButton.root-119');
+  await page.click('button.ms-Button.ms-Button--icon.leftNavToggleButton.mobileButton.root-119');
+  console.log('메뉴 클릭');
+
+
+  // 요청 클릭
+  await page.waitForSelector(`a[role="treeitem"][href="/webmasters/urlinspection?siteUrl=${config.daum.id}/"]`);  
+  await page.click(`a[role="treeitem"][href="/webmasters/urlinspection?siteUrl=${config.daum.id}/"]`);
+  await page.waitForTimeout(1200);
+
+
+  console.log('요청 input등장까지 대기');
+  
+  // 입력 필드가 나타날 때까지 대기 (placeholder와 aria-label로 찾기)
+  await page.waitForSelector(`input[placeholder*="${config.daum.id}"][aria-label*="${config.daum.id}"]`);
+  await page.type(`input[placeholder*="${config.daum.id}"][aria-label*="${config.daum.id}"]`, config.targetUrl); 
+
+  console.log("bing에 target url 입력 성공");
 
 
   // inspect 클릭
-  await page.click('span#id__36');          
-  
+  // 버튼이 나타날 때까지 대기 (aria-label 속성으로 찾기)
+  await page.waitForSelector('button[aria-label="Inspect"]');
+  // 버튼 클릭
+  await page.click('button[aria-label="Inspect"]');
+
+
+
   // request 클릭
   const changableSelector = 'button[data-tag="requestIndexingButton"]';
   const changableButton = await page.waitForSelector(changableSelector);
@@ -295,10 +323,12 @@ app.post('/submit', async (req, res) => {
 
   await page.waitForTimeout(1000);
 
+  console.log('★★제출 시작★★')
   await daum(page);   // 다음 제출
   await naver(page);  // 네이버 제출
   await google(page); // 구글 제출
   await bing(page);   // Bing 제출
+  console.log('★★제출 끝★★')
   
 
 
